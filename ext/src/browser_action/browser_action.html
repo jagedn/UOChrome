@@ -1,17 +1,65 @@
 <!doctype html>
+<html lang="es" ng-app="uocApp">
+<head>
 <style type="text/css">
 	#mainPopup {
 		padding: 10px;
 		height: 200px;
 		width: 400px;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
+		font-size: 14px;
+	}	
+	.card {
+		background:#FFF;
+		border:1px solid;
+		padding:0px;
+		margin:15px;
+		overflow:hidden;
 	}
-	h1 {
-		font-size: 2em;
-	}
-</style>
 
-<div id="mainPopup">
-<h1>Hello extensionizr!</h1>
-<p>To shut this popup down, edit the manifest file and remove the "default popup" key. To edit it, just edit ext/browser_action/browser_action.html. The CSS is there, too.</p>
-</div>
+	.card a {
+	   text-decoration: none;
+	}
+	
+	.card h1 {
+		margin:0px;
+		padding:10px;
+		padding-bottom:0px;
+	}
+
+	.card p {
+		margin:0px;
+		padding:10px;
+	   color: #993300;
+	}
+
+	.card-image {
+		width:100%;
+		height:113px;
+		padding:0px;
+		margin:0px;
+		background-position:center;
+		background-repeat:no-repeat;
+		position:relative;
+		overflow:hidden;
+	}
+
+	.float-left .card {
+		float:left;
+		width:255px;  
+		height:250px;
+	}
+
+</style>
+<script src="../../js/angular/angular.min.js"></script>
+<script src="../../js/jquery/jquery.min.js"></script>
+<script src="browser_action.js"></script>
+</head>
+<body ng-controller="UOChromeCtrl">
+	<div id="mainPopup" class="float-left">
+		<div ng-repeat="aula in aulas" class="card">
+			<h1>{{aula.shortname}}</h1>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 var settings = new Store("settings");
 var sesionId;
-var loginInterval;
+var loginInterval,homePageInterval,checkMinimumReachedInterval ;
 var currentAulas;
 
 function map2string(map){
@@ -21,7 +21,7 @@ function nowToStr(){
 function doLogin(){
 	console.log("enter::doLogin");
 	currentAulas=null;
-	notifyUnread(0);
+	iconUnread(0);
 	if( settings.get("username") == null ||  settings.get("username") == "" ){
 		return;
 	}
@@ -46,7 +46,7 @@ function doLogin(){
 		}),
 		processData: false,
 		success: function(resp) {
-			var iSs = resp.indexOf("?s=");
+			var iSs = resp.indexOf("?s=");			
 			if( iSs != -1 ){		
 				var	iSf = resp.indexOf("\";", iSs);
 				sessionId = resp.substring(iSs + 3, iSf);
@@ -60,13 +60,17 @@ function doLogin(){
 }
 
 function onLogin(){
+	getHomePage();
+}
+
+function getHomePage(){
 	var args = {
 		s : sessionId,
 		newStartingPage:0,
 		language:"b"
 	}			
 	$.get('http://cv.uoc.edu/UOC2000/b/cgi-bin/hola?'+map2string(args), function(resp) {
-		var index = resp.indexOf("aulas = ");			
+		var index = resp.indexOf("aulas = ");				
 		if (index != -1) {			
 			lastPage = resp.substring(index + 8);				
 			var last = lastPage.indexOf(";");
@@ -81,6 +85,8 @@ function onLogin(){
 			resourcesLoaded(resources)
 		}
 		chrome.runtime.sendMessage({uocresponse: "refresh"});
+		homePageInterval = setTimeout(getHomePage,1000*60);
+		checkMinimumReachedInterval = setTimeout(checkMinimumReached,5*1000*60);
 	});
 }
 
@@ -90,36 +96,38 @@ function onLoginError(){
 }
 
 function resourcesLoaded( resources ){
-	currentAulas = resources;
-	
+	currentAulas = resources;	
+	iconUnread(0);	
 	var acum=0;
 	for(var a in resources){
 		if( !settings.get(resources[a].code+"_notificar") ){
+			console.log("resourceLoaded:notificar false "+resources[a].code);
 			resources[a].notificar = false
 			continue;
 		}
 		var tmpacum=0;
-		for(var j in resources[a].resources){			
+		for(var j in resources[a].resources){						
 			resources[a].resources[j].numMesPend |= 0;
 			acum += resources[a].resources[j].numMesPend;
 			if( resources[a].resources[j].numMesPend ){
+				console.log(resources[a].resources[j]);
 				tmpacum+=resources[a].resources[j].numMesPend
 			}
 		}
 		resources[a].numMesPend=tmpacum;
-		acum+=tmpacum;
-	}
+	}	
+	iconUnread(acum);
+}
 	
-	if( acum ){
-		notifyUnread(acum);
-	}
-	
+function checkMinimumReached(){	
 	if( !settings.get("emergentes") ){
+		console.log("end:resourcesLoaded no emergentes")
 		return;
 	}		
 	if( settings.get("minimo") >= acum ){
-		notifyMinimuReached(acum);
+		notifyMinimumReached(acum);
 	}
+	console.log("end:resourcesLoaded")	
 }
 
 
@@ -139,7 +147,8 @@ function notifyLoginError(){
 	},1000*3);
 }
 
-function notifyUnread(unread){
+function iconUnread(unread){
+	console.log("iconUnread:"+unread)
 	if(unread){
 		chrome.browserAction.setIcon({path:"icons/logomsg.png"});  
 		chrome.browserAction.setBadgeText({text:""+unread}); 
@@ -149,7 +158,7 @@ function notifyUnread(unread){
 	}
 } 
 
-function notifyMinimuReached(acum){
+function notifyMinimumReached(acum){
 	var notification = window.webkitNotifications.createNotification(
 		'/icons/logo_puravida_color.png',                      // The image.
 		nowToStr(), // The title.
@@ -168,6 +177,10 @@ chrome.extension.onMessage.addListener(
 		if( request.uocrequest == "refresh" ){
 			clearTimeout(loginInterval);
 			doLogin();			
+		}
+		if( request.uocrequest == "session" ){
+			console.log("uocrequest:session="+sessionId);
+			sendResponse({session:sessionId});
 		}
 		if( request.uocrequest == "aulas" ){
 			console.log("uocrequest:aulas="+currentAulas);

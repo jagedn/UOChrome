@@ -62,7 +62,7 @@ window.addEvent("domready", function () {
 		"min":1,
 		"step":1
     });
-
+	
 	if( store.get("estadisticas") == null )
 		store.set("estadisticas",true)	
 	var estadisticas = settings.create({

@@ -1,5 +1,3 @@
-var uocApp = angular.module('uocApp', []);
-
 var _gaq = _gaq || [];
 _gaq.push([ '_setAccount', 'UA-687332-7' ]);
 _gaq.push([ '_trackPageview' ]);
@@ -17,15 +15,23 @@ function trackEvent(eventId) {
 	_gaq.push([ '_trackEvent', eventId, 'clicked' ]);
 };
 
-uocApp.controller('UOChromeCtrl', function($scope, $log) {
-	$scope.aulas = [];
+var uocApp = angular.module('uocApp', []);
 
+uocApp.controller('UOChromeCtrl', function($scope,$log) {
+	$scope.aulas = [];	
 	chrome.runtime.sendMessage({
-		request : "uocsession"
+		uocrequest : "session"
+	}, function(response) {		
+		$scope.$apply(function() {			
+			$scope.session = response.session;
+		});
+	});
+	chrome.runtime.sendMessage({
+		uocrequest : "aulas"
 	}, function(response) {
 		$scope.$apply(function() {
-			$scope.uocsession = response.uocsession;
 			$scope.aulas = response.aulas
+			$log.info($scope.aulas)
 		});
 	});
 });
