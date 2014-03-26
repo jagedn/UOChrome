@@ -2,6 +2,7 @@ var settings = new Store("settings");
 var sesionId;
 var loginInterval,homePageInterval,checkMinimumReachedInterval ;
 var currentAulas;
+var unReadMsg=0;
 
 function map2string(map){
 	var str = "";
@@ -98,7 +99,7 @@ function onLoginError(){
 function resourcesLoaded( resources ){
 	currentAulas = resources;	
 	iconUnread(0);	
-	var acum=0;
+	unReadMsg=0;
 	for(var a in resources){
 		if( !settings.get(resources[a].code+"_notificar") ){
 			console.log("resourceLoaded:notificar false "+resources[a].code);
@@ -108,7 +109,7 @@ function resourcesLoaded( resources ){
 		var tmpacum=0;
 		for(var j in resources[a].resources){						
 			resources[a].resources[j].numMesPend |= 0;
-			acum += resources[a].resources[j].numMesPend;
+			unReadMsg += resources[a].resources[j].numMesPend;
 			if( resources[a].resources[j].numMesPend ){
 				console.log(resources[a].resources[j]);
 				tmpacum+=resources[a].resources[j].numMesPend
@@ -116,7 +117,7 @@ function resourcesLoaded( resources ){
 		}
 		resources[a].numMesPend=tmpacum;
 	}	
-	iconUnread(acum);
+	iconUnread(unReadMsg);
 }
 	
 function checkMinimumReached(){	
@@ -124,8 +125,8 @@ function checkMinimumReached(){
 		console.log("end:resourcesLoaded no emergentes")
 		return;
 	}		
-	if( settings.get("minimo") >= acum ){
-		notifyMinimumReached(acum);
+	if( settings.get("minimo") >= unReadMsg ){
+		notifyMinimumReached(unReadMsg);
 	}
 	console.log("end:resourcesLoaded")	
 }
