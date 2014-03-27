@@ -160,6 +160,7 @@ function iconUnread(unread){
 } 
 
 function notifyMinimumReached(acum){
+	if(!acum) return;
 	var notification = window.webkitNotifications.createNotification(
 		'/icons/logo_puravida_color.png',                      // The image.
 		nowToStr(), // The title.
