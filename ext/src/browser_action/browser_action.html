@@ -4,16 +4,17 @@
 <style type="text/css">
 	#mainPopup {
 		padding: 10px;
-		height: 200px;
-		width: 400px;
+		width: 90%;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
 		font-size: 14px;
+		margin:0 auto;
 	}	
 	.card {
 		background:#FFF;
-		border:1px solid;
+		border:1px solid #AAA;
+		border-bottom:3px solid #BBB;
 		padding:0px;
-		margin:15px;
+		margin:10px 5px;
 		overflow:hidden;
 	}
 
@@ -25,6 +26,8 @@
 		margin:0px;
 		padding:10px;
 		padding-bottom:0px;
+		font-size:1em;
+		width:255px; 
 	}
 
 	.card p {
@@ -44,10 +47,52 @@
 		overflow:hidden;
 	}
 
-	.float-left .card {
+
+	
+	.card ul{
+		list-style:none;
+		padding:0
+	}
+	
+	.card ul li{
+		padding:5px;
+		font-size:1em;
+		text-align:right;
+		border-bottom:1px dotted;
+		padding:10px 10px 10px 20px;
+		margin:10px 0;
+	}
+	
+	.card ul li .ctitle{
 		float:left;
-		width:255px;  
-		height:250px;
+	}
+	
+	.card ul li .msg{
+		text-align:right;
+		font-weight: bold;
+		text-decoration: none;
+		background:#A2A2A2;
+		min-height: 12px;
+		min-width: 14px;
+		padding: 2px 4px;
+		text-align: center;
+		font-weight: bold;
+		margin-right: -2px;
+		color:white;
+	}
+	
+	.card ul li .msg.first{
+		border-top-left-radius: 3px;
+		border-bottom-left-radius: 3px;
+	}
+	
+	.card ul li .msg.last{
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+	}
+	
+	.card ul li .msg.hasunread{
+		background-color: #B94747;
 	}
 
 </style>
@@ -58,7 +103,16 @@
 <body ng-controller="UOChromeCtrl">
 	<div id="mainPopup" class="float-left">
 		<div ng-repeat="aula in aulas" class="card">
-			<h1>{{aula.shortname}}</h1>
+			<h1 ng-show="aula.shortname.length">{{aula.shortname}}</h1>
+			<h1 ng-show="!aula.shortname.length">{{aula.title}}</h1>
+			<ul>
+				<li ng-repeat="res in aula.resources">
+					<span class="ctitle">{{res.title}}</span>
+					<span class="munread msg first" ng-class="{hasunread: res.hasPendMes}">{{res.numMesPend}}</span>
+					<span class="mtotals msg last">{{res.numMesTot}}</span>
+					<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
+				</li>
+			</ul>
 		</div>
 	</div>
 </body>
