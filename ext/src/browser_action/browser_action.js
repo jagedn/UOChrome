@@ -15,10 +15,23 @@ function trackEvent(eventId) {
 	_gaq.push([ '_trackEvent', eventId, 'clicked' ]);
 };
 
+
+
 var uocApp = angular.module('uocApp', []);
 
 uocApp.controller('UOChromeCtrl', function($scope,$log) {
 	$scope.aulas = [];	
+	$scope.session = '';
+	$scope.refreshSession = function(){
+		chrome.runtime.sendMessage({
+			uocrequest : "refresh"
+		}, function(response) {		
+			$scope.$apply(function() {			
+				$scope.session = response.session;
+			});
+		});
+	};
+	
 	chrome.runtime.sendMessage({
 		uocrequest : "session"
 	}, function(response) {		
@@ -30,6 +43,8 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 		uocrequest : "aulas"
 	}, function(response) {
 		$scope.$apply(function() {
+			$log.info("aqui");
+			$log.info(response);
 			$scope.aulas = response.aulas
 			$log.info($scope.aulas)
 		});

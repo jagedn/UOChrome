@@ -10,6 +10,7 @@
     "48": "icons/logo.png",
     "128": "icons/logo128.png"
   },
+	
   "default_locale": "es",
   "background": {
     "scripts": [
@@ -17,7 +18,7 @@
 	  "src/options_custom/lib/store.js",
 	  "src/options_custom/i18n.js",
 	  "src/options_custom/js/i18n.js",	  
-      "src/bg/background.js"
+    "src/bg/background.js"
     ],
     "persistent": true
   },

@@ -18,7 +18,29 @@ function nowToStr(){
 	var period = time[1] < 12 ? 'a.m.' : 'p.m.'; // The period of the day.
 	return hour + time[2] + ' ' + period;
 }
-
+function getPicture(aula){
+	var args = {
+		s : sessionId,
+		param : 'dCode%3D'+aula.code,
+		up_xmlUrlServiceAPI : 'http%253A%252F%252Fcv.uoc.edu%252Fwebapps%252Fclassroom%252Fservlet%252FGroupServlet%253FdtId%253DDOMAIN',
+		up_target:'aula.jsp',
+		up_dCode: 'aula.code',
+		fromCampus:'true',
+		lang:'es',
+		country:'ES',
+		hp_theme:'false'
+	}
+	$.get('http://cv.uoc.edu/webapps/widgetsUOC/widgetsDominisServlet?'+map2string(args), function(resp) {
+		var index = resp.indexOf('<div class="agora identifica');			
+		if (index != -1) {
+			aula.mc_icon=resp.substring(index+31)
+			var tag = aula.mc_icon[aula.mc_icon.indexOf('src')+4]
+			aula.mc_icon=aula.mc_icon.substring(aula.mc_icon.indexOf('src')+5)
+			aula.mc_icon=aula.mc_icon.substring(0,aula.mc_icon.indexOf(tag))			
+			//saveAula(aula)
+		}
+	});	
+}
 function doLogin(){
 	console.log("enter::doLogin");
 	currentAulas=null;
@@ -80,6 +102,7 @@ function getHomePage(){
 			var resources = [];
 			for(var i in tmp){
 				if( tmp[i].title && tmp[i].resources && (tmp[i].domaintypeid=='AULA'||tmp[i].domaintypeid=='TUTORIA')){
+					getPicture(tmp[i]);
 					resources.push(tmp[i])
 				}
 			}
@@ -119,7 +142,7 @@ function resourcesLoaded( resources ){
 	}	
 	iconUnread(unReadMsg);
 }
-	
+
 function checkMinimumReached(){	
 	if( !settings.get("emergentes") ){
 		console.log("end:resourcesLoaded no emergentes")
@@ -178,15 +201,20 @@ chrome.extension.onMessage.addListener(
 	if( request.uocrequest ){
 		if( request.uocrequest == "refresh" ){
 			clearTimeout(loginInterval);
-			doLogin();			
+			doLogin();		
+			sendResponse({session:sessionId});
 		}
 		if( request.uocrequest == "session" ){
 			console.log("uocrequest:session="+sessionId);
 			sendResponse({session:sessionId});
 		}
 		if( request.uocrequest == "aulas" ){
-			console.log("uocrequest:aulas="+currentAulas);
+			console.log("uocrequest:aulas=");
+			console.log(currentAulas);
 			sendResponse({aulas:currentAulas});
 		}
 	}
   });
+	
+	
+	

@@ -1,21 +1,24 @@
 <!doctype html>
 <html lang="es" ng-app="uocApp">
 <head>
+<title>UOChrome</title>
 <style type="text/css">
 	#mainPopup {
-		padding: 10px;
+		padding-right: 10px;
 		width: 90%;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
 		font-size: 14px;
 		margin:0 auto;
 	}	
 	.card {
-		background:#FFF;
-		border:1px solid #AAA;
+		background:#f9f9f9;
+		border:1px solid #ddd;
 		border-bottom:3px solid #BBB;
 		padding:0px;
 		margin:10px 5px;
 		overflow:hidden;
+		width:350px;
+		border-radius:5px;
 	}
 
 	.card a {
@@ -65,6 +68,14 @@
 	
 	.card ul li .ctitle{
 		float:left;
+		
+	}
+	.card ul li .ctitle a,
+	.card ul li .ctitle a:hover,
+	.card ul li .ctitle a:active,
+	.card ul li .ctitle a:visited{
+		color:black;
+		font-weight:bold;
 	}
 	
 	.card ul li .msg{
@@ -94,23 +105,56 @@
 	.card ul li .msg.hasunread{
 		background-color: #B94747;
 	}
+	.card:nth-child(1n+0){border-bottom:5px solid #e46f61;}
+	.card:nth-child(2n+0){border-bottom:5px solid #4dbfd9;}
+	.card:nth-child(3n+0){border-bottom:5px solid #fbcb43;}
+	.card:nth-child(4n+0){border-bottom:5px solid #bc5679;}
+	.card:nth-child(5n+0){border-bottom:5px solid #6f85bf;}
+	.card:nth-child(6n+0){border-bottom:5px solid #8cc474;}
+	
+	.class-name{color: #262626;
+display: inline-block;
+font: 300 20px Roboto,arial,sans-serif;
 
+}
+h1{float:right;}
+.class-image{
+float:left;
+margin:10px;
+}
+.resources{clear:both;margin-top:15px;}
+
+.subtitle{font-size:.8em; font-style:italic;padding-left:30px;}
 </style>
 <script src="../../js/angular/angular.min.js"></script>
 <script src="../../js/jquery/jquery.min.js"></script>
+
+<!-- JavaScripts -->
+        
+<script src="../options_custom/lib/store.js"></script>
+<script src="../bg/background.js"></script>
 <script src="browser_action.js"></script>
+
 </head>
 <body ng-controller="UOChromeCtrl">
+	<!--<button ng-click="refreshSession()">Recargar Sesión</button>-->
 	<div id="mainPopup" class="float-left">
+		
 		<div ng-repeat="aula in aulas" class="card">
-			<h1 ng-show="aula.shortname.length">{{aula.shortname}}</h1>
-			<h1 ng-show="!aula.shortname.length">{{aula.title}}</h1>
-			<ul>
+			
+			<h1 ng-show="aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.shortname}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
+			<h1 ng-show="!aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.title}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
+			<img src="{{aula.mc_icon}}" alt="{{aula.title}}" width="50" class="class-image" />
+			<ul class="resources">
 				<li ng-repeat="res in aula.resources">
-					<span class="ctitle">{{res.title}}</span>
+					<span class="ctitle"><a href="http://cv.uoc.edu/cgi-bin/ma_mainMailFS?l={{res.code}}&s={{session}}" target="_blank" title="Acceder al {{res.title}}">{{res.title}}</a></span>
 					<span class="munread msg first" ng-class="{hasunread: res.hasPendMes}">{{res.numMesPend}}</span>
 					<span class="mtotals msg last">{{res.numMesTot}}</span>
 					<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
+				</li>
+				<li ng-show="aula.domaintypeid == 'AULA'">
+					<span class="ctitle"><a href="http://cv.uoc.edu/webapps/rac/listEstudiant.action?domainId={{aula.domainid}}&s={{session}}" title="Acceder al Registro de Evaluación Continua" target="_blank">REC</a></span>
+					<span style="clear:both;display:block;"></span>
 				</li>
 			</ul>
 		</div>
