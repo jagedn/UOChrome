@@ -100,12 +100,14 @@ function getHomePage(){
 			lastPage = lastPage.substring(0,last);					
 			var tmp = eval(lastPage);
 			var resources = [];
+			getPersonalMessages(resources);
 			for(var i in tmp){
 				if( tmp[i].title && tmp[i].resources && (tmp[i].domaintypeid=='AULA'||tmp[i].domaintypeid=='TUTORIA')){
 					getPicture(tmp[i]);
 					resources.push(tmp[i])
 				}
 			}
+			console.log(resources);
 			resourcesLoaded(resources)
 		}
 		chrome.runtime.sendMessage({uocresponse: "refresh"});
@@ -119,12 +121,80 @@ function onLoginError(){
 	notifyLoginError();
 }
 
+function getPersonalMessages(resources){
+	console.log("Entering getPersonalMessages()");
+	
+	var personalMailbox = {};
+	
+	$.ajax({
+		url: "http://cv.uoc.edu/WebMail/attach.do",
+		type: 'get',
+		data: {s: sessionId},
+		async:false,
+		success: function(data){
+			
+			var search = 'totalNewMsgs';
+			var index = data.indexOf(search);
+			index = data.indexOf(search, index+1);
+			var firstIndex = index+search.length;
+			var lastIndex = data.indexOf(",", firstIndex);
+			var newMsgs = data.substring(firstIndex, lastIndex).replace('\\":', '');
+			
+			search = 'totalMsgs';
+			index = data.indexOf(search);
+			index = data.indexOf(search, index+1);
+			firstIndex = index+search.length;
+			lastIndex = data.indexOf(",", firstIndex);
+			
+			var totalMsgs = data.substring(firstIndex, lastIndex).replace('\\":', '');
+			
+			
+			search = 'mailS';
+			index = data.indexOf(search);
+			index = data.indexOf(search, index+1);
+			firstIndex = index+search.length;
+			lastIndex = data.indexOf("/>", firstIndex);
+			
+			var image = data.substring(firstIndex, lastIndex).replace("'", '');
+			
+			var parts = image.split('|');
+			if(parts.length > 1){
+				parts = parts[0].split('[');
+				if(parts.length > 1){
+					image = "http://cv.uoc.edu/UOC2000/mc-icons/fotos/##username##.jpg?s=##session##".replace("##username##", $.trim(parts[1])).replace("##session##", sessionId);
+					
+				} else {
+					image = '';
+				}
+			} else {
+				image = '';
+			}
+			
+			personalMailbox.domaintypeid = 'BUZONPERSONAL';
+			personalMailbox.resources = [];
+			
+			var res = {};
+			res.title = 'Buzón Personal';
+			res.unread = newMsgs;
+			res.numMesPend = newMsgs;
+			res.totals = totalMsgs;
+			personalMailbox.resources.push(res);
+			personalMailbox.mc_icon = image;
+			resources.push( personalMailbox);
+		},
+		error: function(){
+			console.log("Error obteniendo mensajes personales");
+		}
+	});
+
+}
+
 function resourcesLoaded( resources ){
 	currentAulas = resources;	
 	iconUnread(0);	
 	unReadMsg=0;
 	for(var a in resources){
-		if( !settings.get(resources[a].code+"_notificar") ){
+		if( !settings.get(resources[a].code+"_notificar") && resources[a].domaintypeid != 'BUZONPERSONAL' ){
 			console.log("resourceLoaded:notificar false "+resources[a].code);
 			resources[a].notificar = false
 			continue;
@@ -174,10 +244,10 @@ function notifyLoginError(){
 function iconUnread(unread){
 	console.log("iconUnread:"+unread)
 	if(unread){
-		chrome.browserAction.setIcon({path:"icons/logomsg.png"});  
+		chrome.browserAction.setIcon({path:"/icons/logomsg.png"});  
 		chrome.browserAction.setBadgeText({text:""+unread}); 
 	}else{
-		chrome.browserAction.setIcon({path:"icons/logo.png"});  
+		chrome.browserAction.setIcon({path:"/icons/logo.png"});  
 		chrome.browserAction.setBadgeText({text:""}); 
 	}
 } 

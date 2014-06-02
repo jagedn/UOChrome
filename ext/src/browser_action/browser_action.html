@@ -139,24 +139,37 @@ margin:10px;
 <body ng-controller="UOChromeCtrl">
 	<!--<button ng-click="refreshSession()">Recargar Sesión</button>-->
 	<div id="mainPopup" class="float-left">
-		
 		<div ng-repeat="aula in aulas" class="card">
+			<div  ng-show="aula.domaintypeid != 'BUZONPERSONAL'">
+				<h1 ng-show="aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.shortname}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
+				<h1 ng-show="!aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.title}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
+				<img src="{{aula.mc_icon}}" alt="{{aula.title}}" width="50" class="class-image" />
+				<ul class="resources">
+					<li ng-repeat="res in aula.resources">
+						<span class="ctitle"><a href="http://cv.uoc.edu/cgi-bin/ma_mainMailFS?l={{res.code}}&s={{session}}" target="_blank" title="Acceder al {{res.title}}">{{res.title}}</a></span>
+						<span class="munread msg first" ng-class="{hasunread: res.hasPendMes}">{{res.numMesPend}}</span>
+						<span class="mtotals msg last">{{res.numMesTot}}</span>
+						<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
+					</li>
+					<li ng-show="aula.domaintypeid == 'AULA'">
+						<span class="ctitle"><a href="http://cv.uoc.edu/webapps/rac/listEstudiant.action?domainId={{aula.domainid}}&s={{session}}" title="Acceder al Registro de Evaluación Continua" target="_blank">REC</a></span>
+						<span style="clear:both;display:block;"></span>
+					</li>
+				</ul>
+			</div>
 			
-			<h1 ng-show="aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.shortname}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
-			<h1 ng-show="!aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.title}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
-			<img src="{{aula.mc_icon}}" alt="{{aula.title}}" width="50" class="class-image" />
-			<ul class="resources">
-				<li ng-repeat="res in aula.resources">
-					<span class="ctitle"><a href="http://cv.uoc.edu/cgi-bin/ma_mainMailFS?l={{res.code}}&s={{session}}" target="_blank" title="Acceder al {{res.title}}">{{res.title}}</a></span>
-					<span class="munread msg first" ng-class="{hasunread: res.hasPendMes}">{{res.numMesPend}}</span>
-					<span class="mtotals msg last">{{res.numMesTot}}</span>
-					<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
-				</li>
-				<li ng-show="aula.domaintypeid == 'AULA'">
-					<span class="ctitle"><a href="http://cv.uoc.edu/webapps/rac/listEstudiant.action?domainId={{aula.domainid}}&s={{session}}" title="Acceder al Registro de Evaluación Continua" target="_blank">REC</a></span>
-					<span style="clear:both;display:block;"></span>
-				</li>
-			</ul>
+			<div  ng-show="aula.domaintypeid == 'BUZONPERSONAL'">
+				<h1><a href="http://cv.uoc.edu/WebMail/attach.do?s={{session}}" class="class-name" target="_blank">Buzón Personal</a></h1>
+				<img src="{{aula.mc_icon}}" alt="{{aula.title}}" width="50" class="class-image" />
+				<ul class="resources">
+					<li ng-repeat="res in aula.resources">
+						<span class="ctitle"><a href="http://cv.uoc.edu/WebMail/attach.do?s={{session}}" target="_blank" title="Acceder al {{res.title}}">{{res.title}}</a></span>
+						<span class="munread msg first" ng-class="{hasunread: res.unread > 0}">{{res.unread}}</span>
+						<span class="mtotals msg last">{{res.totals}}</span>
+						<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </body>
