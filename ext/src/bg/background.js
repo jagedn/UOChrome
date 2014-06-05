@@ -97,7 +97,7 @@ function onLoginError(){
 }
 
 function resourcesLoaded( resources ){
-	currentAulas = resources;	
+	currentAulas = resources;		
 	iconUnread(0);	
 	unReadMsg=0;
 	for(var a in resources){
@@ -186,7 +186,11 @@ chrome.extension.onMessage.addListener(
 		}
 		if( request.uocrequest == "aulas" ){
 			console.log("uocrequest:aulas="+currentAulas);
-			sendResponse({aulas:currentAulas});
+			sendResponse({
+				aulas:currentAulas, 
+				unReadMsg:unReadMsg, 
+				session:sessionId
+			});
 		}
 	}
   });

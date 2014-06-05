@@ -19,19 +19,26 @@ var uocApp = angular.module('uocApp', []);
 
 uocApp.controller('UOChromeCtrl', function($scope,$log) {
 	$scope.aulas = [];	
-	chrome.runtime.sendMessage({
-		uocrequest : "session"
-	}, function(response) {		
-		$scope.$apply(function() {			
-			$scope.session = response.session;
-		});
-	});
+	$scope.unReadMsg=0;
+	$scope.session=null;	
 	chrome.runtime.sendMessage({
 		uocrequest : "aulas"
 	}, function(response) {
 		$scope.$apply(function() {
 			$scope.aulas = response.aulas
-			$log.info($scope.aulas)
+			$scope.unReadMsg = response.unReadMsg			
+			$scope.session = response.session;
+			$log.info($scope.aulas)			
 		});
 	});
+	
+	$scope.copirai = function(){
+		alert("copirai")
+	}
+	$scope.foros = function(){
+		alert("foros")
+	}
+	$scope.openall = function(){
+		alert($scope.unReadMsg)
+	}
 });

@@ -1,63 +1,65 @@
 <!doctype html>
 <html lang="es" ng-app="uocApp">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../../js/bootstrap-3.1.1/css/bootstrap.min.css">
 <style type="text/css">
-	#mainPopup {
+	.mainPopup {
 		padding: 10px;
-		height: 200px;
-		width: 400px;
+		height: 400px;
+		width: 600px;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
 		font-size: 14px;
 	}	
-	.card {
-		background:#FFF;
-		border:1px solid;
-		padding:0px;
-		margin:15px;
-		overflow:hidden;
-	}
-
-	.card a {
-	   text-decoration: none;
-	}
-	
-	.card h1 {
-		margin:0px;
-		padding:10px;
-		padding-bottom:0px;
-	}
-
-	.card p {
-		margin:0px;
-		padding:10px;
-	   color: #993300;
-	}
-
-	.card-image {
-		width:100%;
-		height:113px;
-		padding:0px;
-		margin:0px;
-		background-position:center;
+	.header{
+		width:95%;
+		height:40px;
+		background:url('../../icons/logo.png');
+		background-position:left center;
 		background-repeat:no-repeat;
-		position:relative;
-		overflow:hidden;
+		padding-left:50px;		
 	}
-
-	.float-left .card {
-		float:left;
-		width:255px;  
-		height:250px;
+	.card{
+		width:95%;
 	}
-
+	.copirai{
+		font-size=12px;
+		font-style=italic bold;
+	}
+	.toolbar{
+		width:150px;
+		height:50px;
+		float:right;
+		background-color:gray;
+	}
+	.openall{
+		width:40px;
+		height:40px;
+		background-repeat:no-repeat;
+	}
+	.foro{
+		width:40px;
+		height:40px;
+		background:url('../../icons/group.jpg');
+		background-repeat:no-repeat;
+	}
 </style>
 <script src="../../js/angular/angular.min.js"></script>
 <script src="../../js/jquery/jquery.min.js"></script>
+<script src="../../js/bootstrap-3.1.1/js/bootstrap.min.js"></script>
 <script src="browser_action.js"></script>
 </head>
 <body ng-controller="UOChromeCtrl">
-	<div id="mainPopup" class="float-left">
-		<div ng-repeat="aula in aulas" class="card">
+	<div class="mainPopup">
+		<div class="row">
+			<div class="col-md-4" ng-click="copirai()">UOChrome by Pura Vida Software</div>
+			<div class="col-md-4">&nbsp;</div>
+			<div class="col-md-4">
+				<div class="openall" ng-click="openall()">{{unReadMsg}}</div>
+				<div class="foro" ng-click="foros()"/>
+			</didv>
+		</div>
+		<div ng-repeat="aula in aulas" class="row">
 			<h1>{{aula.shortname}}</h1>
 		</div>
 	</div>
