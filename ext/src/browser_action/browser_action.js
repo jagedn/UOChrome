@@ -15,30 +15,38 @@ function trackEvent(eventId) {
 	_gaq.push([ '_trackEvent', eventId, 'clicked' ]);
 };
 
+
+
 var uocApp = angular.module('uocApp', []);
 
 uocApp.controller('UOChromeCtrl', function($scope,$log) {
 	$scope.aulas = [];	
-	$scope.unReadMsg=0;
-	$scope.session=null;	
+	$scope.session = '';
+	$scope.refreshSession = function(){
+		chrome.runtime.sendMessage({
+			uocrequest : "refresh"
+		}, function(response) {		
+			$scope.$apply(function() {			
+				$scope.session = response.session;
+			});
+		});
+	};
+	
+	chrome.runtime.sendMessage({
+		uocrequest : "session"
+	}, function(response) {		
+		$scope.$apply(function() {			
+			$scope.session = response.session;
+		});
+	});
 	chrome.runtime.sendMessage({
 		uocrequest : "aulas"
 	}, function(response) {
 		$scope.$apply(function() {
+			$log.info("aqui");
+			$log.info(response);
 			$scope.aulas = response.aulas
-			$scope.unReadMsg = response.unReadMsg			
-			$scope.session = response.session;
-			$log.info($scope.aulas)			
+			$log.info($scope.aulas)
 		});
 	});
-	
-	$scope.copirai = function(){
-		alert("copirai")
-	}
-	$scope.foros = function(){
-		alert("foros")
-	}
-	$scope.openall = function(){
-		alert($scope.unReadMsg)
-	}
 });
