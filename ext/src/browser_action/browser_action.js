@@ -42,11 +42,15 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 	chrome.runtime.sendMessage({
 		uocrequest : "aulas"
 	}, function(response) {
-		$scope.$apply(function() {
-			$log.info("aqui");
-			$log.info(response);
-			$scope.aulas = response.aulas
-			$log.info($scope.aulas)
+		$scope.$apply(function() {			
+			$scope.aulas = []
+			angular.forEach(response.aulas,function(value){
+				if(value.domaintypeid == 'BUZONPERSONAL'){
+					$scope.buzonpersonal = value;
+				}else{
+					$scope.aulas.push(value)
+				}				
+			});
 		});
 	});
 });
