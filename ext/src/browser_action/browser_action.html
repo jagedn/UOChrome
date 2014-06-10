@@ -3,22 +3,26 @@
 <head>
 <title>UOChrome</title>
 <style type="text/css">
+	body{margin:0;}
 	#mainPopup {
 		padding-right: 10px;
-		width: 90%;
+		width: 800px;
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
 		font-size: 14px;
 		margin:0 auto;
+		min-height:300px;
 	}	
 	.card {
-		background:#f9f9f9;
-		border:1px solid #ddd;
-		border-bottom:3px solid #BBB;
-		padding:0px;
-		margin:10px 5px;
-		overflow:hidden;
-		width:350px;
-		border-radius:5px;
+		background: #f9f9f9;
+		border: 1px solid #ddd;
+		border-bottom: 3px solid #BBB;
+		padding: 0px;
+		margin: 1%;
+		overflow: auto;
+		width: 30%;
+		border-radius: 5px;
+		float: left;
+		height: 220px;
 	}
 
 	.card a {
@@ -26,11 +30,11 @@
 	}
 	
 	.card h1 {
-		margin:0px;
-		padding:10px;
-		padding-bottom:0px;
-		font-size:1em;
-		width:255px; 
+		margin: 0px;
+		padding: 2%;
+		padding-bottom: 0px;
+		font-size: 1em;
+		width: 70%;
 	}
 
 	.card p {
@@ -58,27 +62,27 @@
 	}
 	
 	.card ul li{
-		padding:5px;
-		font-size:1em;
-		text-align:right;
-		border-bottom:1px dotted;
-		padding:10px 10px 10px 20px;
-		margin:10px 0;
+		font-size: 1em;
+		text-align: right;
+		border-bottom: 1px dotted;
+		padding: 5px 5px 5px 20px;
+		margin: 10px 0 0 0;
 	}
 	
 	.card ul li .ctitle{
 		float:left;
 		
 	}
-	.card ul li .ctitle a,
-	.card ul li .ctitle a:hover,
-	.card ul li .ctitle a:active,
-	.card ul li .ctitle a:visited{
+	a,
+	a:hover,
+	a:active,
+	a:visited{
 		color:black;
 		font-weight:bold;
+		text-decoration:none;
 	}
 	
-	.card ul li .msg{
+	ul li .msg{
 		text-align:right;
 		font-weight: bold;
 		text-decoration: none;
@@ -92,17 +96,17 @@
 		color:white;
 	}
 	
-	.card ul li .msg.first{
+	ul li .msg.first{
 		border-top-left-radius: 3px;
 		border-bottom-left-radius: 3px;
 	}
 	
-	.card ul li .msg.last{
+	ul li .msg.last{
 		border-top-right-radius: 3px;
 		border-bottom-right-radius: 3px;
 	}
 	
-	.card ul li .msg.hasunread{
+	ul li .msg.hasunread{
 		background-color: #B94747;
 	}
 	.card:nth-child(1n+0){border-bottom:5px solid #e46f61;}
@@ -114,20 +118,69 @@
 	
 	.class-name{color: #262626;
 display: inline-block;
-font: 300 20px Roboto,arial,sans-serif;
-
+font: 300 17px Roboto,arial,sans-serif;
+font-weight: bold;
 }
 h1{float:right;}
 .class-image{
-float:left;
-margin:10px;
+float: left;
+margin: 3%;
+width: 20%;
 }
-.resources{clear:both;margin-top:15px;}
-
+.resources{clear:both;margin-top:15px;margin-bottom:0;}
+#menu{padding:1%;
+background: rgb(255,255,255); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+border-bottom: 5px solid #6f6f6f;
+}
 .subtitle{font-size:.8em; font-style:italic;padding-left:30px;}
+#menu ul{margin:0;padding:0;padding-left:2%;}
+#menu > ul > li{list-style-type:none;float:left;margin-right:2%;width:20%;padding:0.5%}
+
+#buzonPersonal .mailbox-title{
+	font-weight:bold;
+	font-size:1em;
+}
+.clear{clear:both;}
+img.image-left{float:left;width:40px;margin-right:3%;}
+#menu .resources{clear:none; margin:5%;}
+
+#menu li .title{
+display: block;
+margin-bottom: 2%;
+}
+#menu li.simple a{
+	
+	display: block;
+}
+
+#last-news{padding:1%;
+background: rgb(255,255,255); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+border-top: 5px solid #fbcb43;
+
+}
+#last-news .title{font-style:italic;font-weight:bold; }
+#last-news .copyright{font-size:.7em;font-style:italic;}
+.logo{width:30%;float:right;text-align:left;}
+.logo h1{font: 300 2.5em Roboto,arial,sans-serif;font-style:italic;font-weight:bold;float:none;margin:0}
+.logo .subtitle{font: 300 1em Roboto,arial,sans-serif;font-style:italic;display:block;padding:0;}
 </style>
-<script src="../../js/angular/angular.min.js"></script>
 <script src="../../js/jquery/jquery.min.js"></script>
+<script src="../../js/angular/angular.min.js"></script>
+
 
 <!-- JavaScripts -->
         
@@ -139,11 +192,58 @@ margin:10px;
 <body ng-controller="UOChromeCtrl">
 	<!--<button ng-click="refreshSession()">Recargar Sesión</button>-->
 	<div id="mainPopup" class="float-left">
-		<div ng-repeat="aula in aulas" class="card">
-			<div  ng-show="aula.domaintypeid != 'BUZONPERSONAL'">
+	
+		<div id="menu">
+			<div class="logo"><h1>UOChrome</h1><span class="subtitle">UOC Fast Access</span></div>
+			<ul>
+				<li>
+					<div id="buzonPersonal">
+						<div ng-repeat="aula in aulas | filter: {domaintypeid: 'BUZONPERSONAL'}">
+							<a href="http://cv.uoc.edu/WebMail/attach.do?s={{session}}" target="_blank" title="Acceder al {{res.title}}">
+								<span class="title">Buzón Personal</span>
+								<img src="{{aula.mc_icon}}" width="50" class="image-left"/>
+								<ul class="resources">
+									<li ng-repeat="res in aula.resources">
+										<span class="munread msg first" ng-class="{hasunread: res.unread > 0}">{{res.unread}}</span>
+										<span class="mtotals msg last">{{res.totals}}</span>
+										<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
+									</li>
+								</ul>
+							</a>
+						</div>
+					</div>
+				</li>
+				<li class="simple">
+					<a href="http://cv.uoc.edu/cgi-bin/uocapp?s={{session}}" title="Acceder al Campus" target="_blank">
+						<span class="title">Campus</span>
+						<img src="../../icons/campus_icon.gif" alt="Acceso al Campus" />
+						
+					</a>
+					
+				</li>
+				<li>
+					<a href="javascript:void(0)" ng-click="accesoRapido()" title="Abrir aulas con mensajes pendientes">
+						<span class="title">Acceso Rápido</span>
+						<img src="../../icons/msg_icon.gif" alt="Acceso Rápido" class="image-left" />
+						<ul class="resources">
+							<li>
+								<span class="munread msg first " ng-class="{hasunread: unreadmessages > 0}">{{unreadmessages}}</span>
+								
+							</li>
+						</ul>
+					</a>
+					
+				</li>
+			</ul>
+			
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		<div ng-repeat="aula in aulas | filter: !{domaintypeid: 'BUZONPERSONAL'}" class="card">
+			
 				<h1 ng-show="aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.shortname}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
 				<h1 ng-show="!aula.shortname.length"><a href="http://cv.uoc.edu/webapps/classroom/{{aula.pt_template}}/frameset.jsp?domainCode={{aula.code}}&s={{session}}" class="class-name" target="_blank">{{aula.title}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
-				<img src="{{aula.mc_icon}}" alt="{{aula.title}}" width="50" class="class-image" />
+				<img src="{{aula.mc_icon}}" alt="{{aula.title}}" class="class-image" />
 				<ul class="resources">
 					<li ng-repeat="res in aula.resources">
 						<span class="ctitle"><a href="http://cv.uoc.edu/cgi-bin/ma_mainMailFS?l={{res.code}}&s={{session}}" target="_blank" title="Acceder al {{res.title}}">{{res.title}}</a></span>
@@ -156,21 +256,17 @@ margin:10px;
 						<span style="clear:both;display:block;"></span>
 					</li>
 				</ul>
-			</div>
 			
-			<div  ng-show="aula.domaintypeid == 'BUZONPERSONAL'">
-				<h1><a href="http://cv.uoc.edu/WebMail/attach.do?s={{session}}" class="class-name" target="_blank">Buzón Personal</a></h1>
-				<img src="{{aula.mc_icon}}" alt="{{aula.title}}" width="50" class="class-image" />
-				<ul class="resources">
-					<li ng-repeat="res in aula.resources">
-						<span class="ctitle"><a href="http://cv.uoc.edu/WebMail/attach.do?s={{session}}" target="_blank" title="Acceder al {{res.title}}">{{res.title}}</a></span>
-						<span class="munread msg first" ng-class="{hasunread: res.unread > 0}">{{res.unread}}</span>
-						<span class="mtotals msg last">{{res.totals}}</span>
-						<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
-					</li>
-				</ul>
-			</div>
+			
+			
 		</div>
+		<div class="clear"></div>
+		<div id="last-news">
+			<span class="title">Últimas Noticias</span>
+			<p>Aquí el contenido de las últimas noticias. Idealmente en una sola línea</p>
+			<div class="copyright">Powered by: <a href="https://plus.google.com/+JorgeAguilera-PuraVida" target="_blank" title="Jorge Aguilera González">+JorgeAguilera-PuraVida</a> & <a href="https://plus.google.com/+DavidLorenzoLópez88" target="_blank" title="David Lorenzo López">+DavidLorenzoLópez88</a></div>
+		</div>
+		
 	</div>
 </body>
 </html>
