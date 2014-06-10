@@ -285,7 +285,7 @@ chrome.extension.onMessage.addListener(
 		}
 		if( request.uocrequest == "session" ){
 			console.log("uocrequest:session="+sessionId);
-			doLogin();		
+			//doLogin();		
 			sendResponse({session:sessionId});
 		}
 		if( request.uocrequest == "aulas" ){
