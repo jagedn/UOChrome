@@ -3,6 +3,7 @@ var sesionId;
 var loginInterval,homePageInterval,checkMinimumReachedInterval ;
 var currentAulas;
 var unReadMsg=0;
+var personalMailbox = {};
 
 function map2string(map){
 	var str = "";
@@ -83,7 +84,8 @@ function doLogin(){
 }
 
 function onLogin(){
-	getHomePage();
+	getHomePage();	
+	getPersonalMessages()
 }
 
 function getHomePage(){
@@ -100,7 +102,6 @@ function getHomePage(){
 			lastPage = lastPage.substring(0,last);					
 			var tmp = eval(lastPage);
 			var resources = [];
-			getPersonalMessages(resources);
 			for(var i in tmp){
 				if( tmp[i].title && tmp[i].resources && (tmp[i].domaintypeid=='AULA'||tmp[i].domaintypeid=='TUTORIA')){
 					getPicture(tmp[i]);
@@ -108,9 +109,8 @@ function getHomePage(){
 				}
 			}
 			console.log(resources);
-			resourcesLoaded(resources)
-		}
-		chrome.runtime.sendMessage({uocresponse: "refresh"});
+			resourcesLoaded( resources )
+		}		
 		homePageInterval = setTimeout(getHomePage,1000*60);
 		checkMinimumReachedInterval = setTimeout(checkMinimumReached,5*1000*60);
 	});
@@ -121,16 +121,16 @@ function onLoginError(){
 	notifyLoginError();
 }
 
-function getPersonalMessages(resources){
+function getPersonalMessages(){
 	console.log("Entering getPersonalMessages()");
 	
-	var personalMailbox = {};
+	personalMailbox = {};
 	
 	$.ajax({
 		url: "http://cv.uoc.edu/WebMail/attach.do",
 		type: 'get',
+		async:'false',
 		data: {s: sessionId},
-		async:false,
 		success: function(data){
 			
 			var search = 'totalNewMsgs';
@@ -147,8 +147,7 @@ function getPersonalMessages(resources){
 			lastIndex = data.indexOf(",", firstIndex);
 			
 			var totalMsgs = data.substring(firstIndex, lastIndex).replace('\\":', '');
-			
-			
+						
 			search = 'mailS';
 			index = data.indexOf(search);
 			index = data.indexOf(search, index+1);
@@ -179,8 +178,9 @@ function getPersonalMessages(resources){
 			res.numMesPend = newMsgs;
 			res.totals = totalMsgs;
 			personalMailbox.resources.push(res);
-			personalMailbox.mc_icon = image;
-			resources.push( personalMailbox);
+			personalMailbox.mc_icon = image;			
+			
+			personalBuzonInterval = setTimeout(getPersonalMessages,1000*60*10);
 		},
 		error: function(){
 			console.log("Error obteniendo mensajes personales");
@@ -223,9 +223,6 @@ function checkMinimumReached(){
 	}
 	console.log("end:resourcesLoaded")	
 }
-
-
-loginInterval = setTimeout(doLogin,1000);
 
 function notifyLoginError(){
 	console.log("Login error");
@@ -278,22 +275,25 @@ function hasUnreadMessages(aula){
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
 	if( request.uocrequest ){
-		if( request.uocrequest == "refresh" ){
-			
-			doLogin();		
-			sendResponse({session:sessionId, aulas: currentAulas});
+		
+		if( request.uocrequest == "refresh" ){			
+			doLogin();					
 		}
-		if( request.uocrequest == "session" ){
-			console.log("uocrequest:session="+sessionId);
-			doLogin();		
+		
+		if( request.uocrequest == "session" ){			
 			sendResponse({session:sessionId});
 		}
+		
 		if( request.uocrequest == "aulas" ){
-			console.log("uocrequest:aulas=");
-			console.log(currentAulas);
-			
-			sendResponse({aulas:currentAulas});
+			console.log("uocrequest:aulas="+currentAulas);
+			sendResponse({
+				session:sessionId,
+				unReadMsg : unReadMsg,
+				aulas:currentAulas,
+				personalMailbox:personalMailbox
+			});
 		}
+		
 		if(request.uocrequest == "openunread"){
 			for(var r in currentAulas){
 					if(hasUnreadMessages(currentAulas[r])){
@@ -302,16 +302,14 @@ chrome.extension.onMessage.addListener(
 								newURL = "http://cv.uoc.edu/WebMail/attach.do?s="+sessionId;
 							} else {
 								newURL = "http://cv.uoc.edu/webapps/classroom/"+currentAulas[r].pt_template+"/frameset.jsp?domainCode="+currentAulas[r].code+"&s="+sessionId;
-							}
-							
+							}							
 							chrome.tabs.create({ url: newURL });
-							
-						
 					}
 				}
 		}
 	}
   });
+		
 	
-	
-	
+// Por ultimo desencadenamos el proceso de login 
+loginInterval = setTimeout(doLogin,1000);
