@@ -275,6 +275,10 @@ function hasUnreadMessages(aula){
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
 	if( request.uocrequest ){
+		if( request.uocrequest == "refresh" ){
+			
+			doLogin();		
+			sendResponse({session:sessionId, aulas: currentAulas});
 		
 		if( request.uocrequest == "refresh" ){			
 			doLogin();					
