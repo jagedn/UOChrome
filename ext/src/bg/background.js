@@ -275,13 +275,8 @@ function hasUnreadMessages(aula){
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
 	if( request.uocrequest ){
-		if( request.uocrequest == "refresh" ){
-			
-			doLogin();		
-			sendResponse({session:sessionId, aulas: currentAulas});
-		
 		if( request.uocrequest == "refresh" ){			
-			doLogin();					
+			doLogin();		
 		}
 		
 		if( request.uocrequest == "session" ){			
@@ -300,16 +295,16 @@ chrome.extension.onMessage.addListener(
 		
 		if(request.uocrequest == "openunread"){
 			for(var r in currentAulas){
-					if(hasUnreadMessages(currentAulas[r])){
-							var newURL = '';
-							if(currentAulas[r].domaintypeid == "BUZONPERSONAL"){
-								newURL = "http://cv.uoc.edu/WebMail/attach.do?s="+sessionId;
-							} else {
-								newURL = "http://cv.uoc.edu/webapps/classroom/"+currentAulas[r].pt_template+"/frameset.jsp?domainCode="+currentAulas[r].code+"&s="+sessionId;
-							}							
-							chrome.tabs.create({ url: newURL });
-					}
+				if(hasUnreadMessages(currentAulas[r])){
+						var newURL = '';
+						if(currentAulas[r].domaintypeid == "BUZONPERSONAL"){
+							newURL = "http://cv.uoc.edu/WebMail/attach.do?s="+sessionId;
+						} else {
+							newURL = "http://cv.uoc.edu/webapps/classroom/"+currentAulas[r].pt_template+"/frameset.jsp?domainCode="+currentAulas[r].code+"&s="+sessionId;
+						}							
+						chrome.tabs.create({ url: newURL });
 				}
+			}
 		}
 	}
   });

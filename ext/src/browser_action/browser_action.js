@@ -52,10 +52,13 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 		element.innerHTML = html;
 	};
 	
+	$log.info("send request")
 	chrome.runtime.sendMessage({
 		uocrequest : "aulas"
 	}, function(response) {
 		$scope.$apply(function() {
+			$log.info("Aulas obtenidas :");
+			$log.info(response)
 			$scope.session = response.session
 			$scope.aulas = response.aulas
 			$scope.unreadmessages = response.unReadMsg
