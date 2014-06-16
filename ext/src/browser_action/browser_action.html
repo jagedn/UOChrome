@@ -157,6 +157,9 @@ img.image-left{float:left;width:40px;margin-right:3%;}
 #menu li .title{
 display: block;
 margin-bottom: 2%;
+color:black;
+font-weight:bold;
+text-decoration:none;
 }
 #menu li.simple a{
 	
@@ -214,18 +217,34 @@ width:100%;
 	<div id="mainPopup" class="float-left">
 	
 		<div id="menu">
-			<div class="logo">
-				<span class="subtitle">
-				</span>
-			</div>
+			
 			<ul>
+				<li>
+					<div id="buzonPersonal">
+						<div>
+							<a href="http://cv.uoc.edu/WebMail/attach.do?s={{session}}" target="_blank" title="Acceder al {{personalMailbox.title}}">
+								<span class="title">Buzón Personal</span>
+								<img src="{{personalMailbox.mc_icon}}" width="50" class="image-left"/>
+								<ul class="resources">
+									<li ng-repeat="res in personalMailbox.resources">
+										<span class="munread msg first" ng-class="{hasunread: res.unread > 0}">{{res.unread}}</span>
+										<span class="mtotals msg last">{{res.totals}}</span>
+										<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
+									</li>
+								</ul>
+							</a>
+						</div>
+					</div>
+				</li>
 				<li class="simple">
-					<a href="http://cv.uoc.edu/cgi-bin/uocapp?s={{session}}" title="Acceder al Campus" target="_blank">						
+					<a href="http://cv.uoc.edu/cgi-bin/uocapp?s={{session}}" title="Acceder al Campus" target="_blank">		
+						<span class="title">Campus</span>
 						<img src="../../icons/campus_icon.gif" alt="Acceso al Campus" />						
 					</a>					
 				</li>
 				<li>
-					<a href="javascript:void(0)" ng-click="accesoRapido()" title="Abrir aulas con mensajes pendientes">						
+					<a href="javascript:void(0)" ng-click="accesoRapido()" title="Abrir aulas con mensajes pendientes">			
+						<span class="title">Acceso Rápido</span>
 						<img src="../../icons/msg_icon.gif" alt="Acceso Rápido" class="image-left" />
 						<ul class="resources">
 							<li>
@@ -235,7 +254,8 @@ width:100%;
 						</ul>
 					</a>				
 				</li>
-				<li style="float:right">
+				<li class="simple">
+					<span class="title">UOChrome</span>
 					<button class="btn btn-primary btn-lg glyphicon glyphicon-info-sign" data-toggle="modal" data-target="#aboutDlg">					
 					</button>
 				</li>
@@ -262,19 +282,7 @@ width:100%;
 			</ul>			
 		</div>
 		
-		<div id="buzonPersonal" class="card" >
-			<a href="http://cv.uoc.edu/WebMail/attach.do?s={{session}}" target="_blank" title="Acceder al {{personalMailbox.title}}">
-				<span class="title">Buzón Personal</span>
-				<img src="{{personalMailbox.mc_icon}}" width="50" class="image-left"/>
-				<ul class="resources">
-					<li ng-repeat="res in personalMailbox.resources">
-						<span class="munread msg first" ng-class="{hasunread: res.unread > 0}">{{res.unread}}</span>
-						<span class="mtotals msg last">{{res.totals}}</span>
-						<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
-					</li>
-				</ul>
-			</a>
-		</div>
+		
 		
 		<div id="ertwitter" class="card" >
 			<a class="twitter-timeline"
