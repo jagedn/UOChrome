@@ -78,6 +78,9 @@ function doLogin(){
 			}else{
 				onLoginError();
 			}
+		},
+		error: function(){
+			onLoginError();
 		}
     });
 	console.log("exit::doLogin");
