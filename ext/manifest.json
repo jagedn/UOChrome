@@ -1,8 +1,8 @@
 {
-  "name": "UOChrome",
+  "name": "UOChrome 4",
   "version": "4.0.1",
   "manifest_version": 2,
-  "description": "Extension de Chrome para la UOC.",
+  "description": "Extension de Chrome para la UOC renovada.",
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://cdn.syndication.twimg.com/widgets/timelines/478214066293313536 https://platform.twitter.com; object-src 'self'",
   "homepage_url": "http://public.puravida-software.com",
   "icons": {
