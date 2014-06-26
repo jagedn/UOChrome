@@ -1,24 +1,5 @@
-var _gaq = _gaq || [];
-_gaq.push([ '_setAccount', 'UA-687332-7' ]);
-_gaq.push([ '_trackPageview' ]);
-
-(function() {
-	var ga = document.createElement('script');
-	ga.type = 'text/javascript';
-	ga.async = true;
-	ga.src = 'https://ssl.google-analytics.com/ga.js';
-	var s = document.getElementsByTagName('script')[0];
-	s.parentNode.insertBefore(ga, s);
-})();
-
-
-function trackEvent(eventId) {
-	_gaq.push([ '_trackEvent', eventId, 'clicked' ]);
-};
 
 var uocApp = angular.module('uocApp', []);
-
-
 
 uocApp.controller('UOChromeCtrl', function($scope,$log) {
 	$scope.aulas = [];	
@@ -51,6 +32,41 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 		html += '</ul>';
 		element.innerHTML = html;
 	};
+
+	$scope.buzonPersonal = function(){
+		chrome.runtime.sendMessage({
+			uocrequest : "openBuzonPersonal"
+		});
+	};
+	
+	$scope.campus = function(){
+		chrome.runtime.sendMessage({
+			uocrequest : "openCampus"
+		});
+	}
+	
+	$scope.openAula = function(aula){
+		chrome.runtime.sendMessage({
+			uocrequest: "openAula",
+			aula : aula
+		});
+	}
+	
+	$scope.openResource = function(aula, resource){
+		chrome.runtime.sendMessage({
+			uocrequest: "openResource",
+			aula : aula,
+			resource : resource
+		});
+	}
+	
+	$scope.openRac = function(aula, resource){
+		chrome.runtime.sendMessage({
+			uocrequest: "openRac",
+			aula : aula,
+			resource : resource
+		});
+	}
 	
 	$log.info("send request")
 	chrome.runtime.sendMessage({

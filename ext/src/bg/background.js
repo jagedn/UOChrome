@@ -269,11 +269,29 @@ function notifyMinimumReached(acum){
 function hasUnreadMessages(aula){
 	var unread = 0;
 	for(var r in aula.resources){
-		if(parseInt(aula.resources[r].unread))
-			unread = unread + parseInt(aula.resources[r].unread);
+		if(parseInt(aula.resources[r].numMesPend))
+			unread = unread + parseInt(aula.resources[r].numMesPend);
 	}
 	return unread;
 }
+
+var _gaq = _gaq || [];
+_gaq.push([ '_setAccount', 'UA-687332-7' ]);
+_gaq.push([ '_trackPageview' ]);
+
+(function() {
+	var ga = document.createElement('script');
+	ga.type = 'text/javascript';
+	ga.async = true;
+	ga.src = 'https://ssl.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0];
+	s.parentNode.insertBefore(ga, s);
+})();
+
+
+function trackEvent(eventId) {
+	_gaq.push([ '_trackEvent', eventId, 'clicked' ]);
+};
 
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -298,20 +316,52 @@ chrome.extension.onMessage.addListener(
 		
 		if(request.uocrequest == "openunread"){
 			for(var r in currentAulas){
-				if(hasUnreadMessages(currentAulas[r])){
+				if(hasUnreadMessages(currentAulas[r])){				
 						var newURL = '';
 						if(currentAulas[r].domaintypeid == "BUZONPERSONAL"){
 							newURL = "http://cv.uoc.edu/WebMail/attach.do?s="+sessionId;
 						} else {
 							newURL = "http://cv.uoc.edu/webapps/classroom/"+currentAulas[r].pt_template+"/frameset.jsp?domainCode="+currentAulas[r].code+"&s="+sessionId;
-						}							
+						}										
+						trackEvent(currentAulas[r].title);						
 						chrome.tabs.create({ url: newURL });
 				}
 			}
 		}
+		
+		if( request.uocrequest == "openBuzonPersonal"){		
+			var	newURL ="http://cv.uoc.edu/WebMail/attach.do?s="+sessionId; 
+			trackEvent('buzon');
+			chrome.tabs.create({ url: newURL });
+		}
+		
+		if( request.uocrequest == "openCampus"){		
+			var newURL ="http://cv.uoc.edu/cgi-bin/uocapp?s="+sessionId;
+			trackEvent('campus');
+			chrome.tabs.create({ url: newURL });
+		}
+		
+		if( request.uocrequest == "openAula"){		
+			var newURL = "http://cv.uoc.edu/webapps/classroom/"+request.aula.pt_template+"/frameset.jsp?domainCode="+request.aula.code+"&s="+sessionId;
+			trackEvent(request.aula.title);
+			chrome.tabs.create({ url: newURL });
+		}
+		
+		if( request.uocrequest == "openResource"){		
+			var newURL = "http://cv.uoc.edu/cgi-bin/ma_mainMailFS?l="+request.resource.code+"&s="+sessionId;
+			trackEvent(request.aula.title);
+			chrome.tabs.create({ url: newURL });
+		}
+		
+		if( request.uocrequest == "openRac"){		
+			var newURL = "http://cv.uoc.edu/webapps/rac/listEstudiant.action?domainId="+request.aula.domainid+"&s="+sessionId;
+			trackEvent(request.aula.title);
+			chrome.tabs.create({ url: newURL });
+		}
+
 	}
   });
 		
-	
+trackEvent('started');	
 // Por ultimo desencadenamos el proceso de login 
 loginInterval = setTimeout(doLogin,1000);
