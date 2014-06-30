@@ -293,6 +293,30 @@ function trackEvent(eventId) {
 	_gaq.push([ '_trackEvent', eventId, 'clicked' ]);
 };
 
+function openAula( aula ){
+	var newURL = "http://cv.uoc.edu/webapps/classroom/"+aula.pt_template+"/frameset.jsp?domainCode="+aula.code+"&s="+sessionId;
+	trackEvent(aula.title);
+	chrome.tabs.create({ url: newURL });
+}
+
+function openResource(aula, resource){
+	var newURL = "http://cv.uoc.edu/cgi-bin/ma_mainMailFS?l="+resource.code+"&s="+sessionId;
+	trackEvent(aula.title);
+	chrome.tabs.create({ url: newURL });
+}
+
+function openRac(aula){
+	var newURL = "http://cv.uoc.edu/webapps/rac/listEstudiant.action?domainId="+aula.domainid+"&s="+sessionId;
+	trackEvent(aula.title);
+	chrome.tabs.create({ url: newURL });
+}
+
+function openBuzon(){
+	var newURL = "http://cv.uoc.edu/WebMail/attach.do?s="+sessionId;
+	trackEvent('buzon');
+	chrome.tabs.create({ url: newURL });
+}
+
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
 	if( request.uocrequest ){
@@ -315,16 +339,18 @@ chrome.extension.onMessage.addListener(
 		}
 		
 		if(request.uocrequest == "openunread"){
-			for(var r in currentAulas){
-				if(hasUnreadMessages(currentAulas[r])){				
+			for(var a in currentAulas){
+				if(hasUnreadMessages(currentAulas[a])){				
 						var newURL = '';
-						if(currentAulas[r].domaintypeid == "BUZONPERSONAL"){
-							newURL = "http://cv.uoc.edu/WebMail/attach.do?s="+sessionId;
+						if(currentAulas[a].domaintypeid == "BUZONPERSONAL"){
+							openBuzon()
 						} else {
-							newURL = "http://cv.uoc.edu/webapps/classroom/"+currentAulas[r].pt_template+"/frameset.jsp?domainCode="+currentAulas[r].code+"&s="+sessionId;
+							for(var r in currentAulas[a].resources){
+								if(parseInt(currentAulas[a].resources[r].numMesPend)){
+									openResource(currentAulas[a],currentAulas[a].resources[r])
+								}
+							}	
 						}										
-						trackEvent(currentAulas[r].title);						
-						chrome.tabs.create({ url: newURL });
 				}
 			}
 		}
@@ -342,21 +368,15 @@ chrome.extension.onMessage.addListener(
 		}
 		
 		if( request.uocrequest == "openAula"){		
-			var newURL = "http://cv.uoc.edu/webapps/classroom/"+request.aula.pt_template+"/frameset.jsp?domainCode="+request.aula.code+"&s="+sessionId;
-			trackEvent(request.aula.title);
-			chrome.tabs.create({ url: newURL });
+			openAula(request.aula)
 		}
 		
 		if( request.uocrequest == "openResource"){		
-			var newURL = "http://cv.uoc.edu/cgi-bin/ma_mainMailFS?l="+request.resource.code+"&s="+sessionId;
-			trackEvent(request.aula.title);
-			chrome.tabs.create({ url: newURL });
+			openResource(request.aula,request.resource)
 		}
 		
 		if( request.uocrequest == "openRac"){		
-			var newURL = "http://cv.uoc.edu/webapps/rac/listEstudiant.action?domainId="+request.aula.domainid+"&s="+sessionId;
-			trackEvent(request.aula.title);
-			chrome.tabs.create({ url: newURL });
+			openRac(request.aula)
 		}
 
 	}
