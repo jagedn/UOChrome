@@ -13,7 +13,7 @@
 		font-family: Helvetica, Ubuntu, Arial, sans-serif;
 		font-size: 14px;
 		margin:0 auto;
-		min-height:300px;
+		min-height:330px;
 	}	
 	.card {
 		background: #f9f9f9;
@@ -82,7 +82,7 @@
 	a:visited{
 		color:black;
 		font-weight:bold;
-		text-decoration:none;
+		cursor: pointer; 
 	}
 	
 	ul li .msg{
@@ -222,7 +222,7 @@ width:100%;
 				<li>
 					<div id="buzonPersonal">
 						<div>
-							<a href="javascript:void(0)" ng-click="buzonPersonal()" title="Acceder al {{personalMailbox.title}}">
+							<a ng-click="buzonPersonal()" title="Acceder al {{personalMailbox.title}}">
 								<span class="title">Buzón Personal</span>
 								<img src="{{personalMailbox.mc_icon}}" width="50" class="image-left"/>
 								<ul class="resources">
@@ -237,13 +237,13 @@ width:100%;
 					</div>
 				</li>
 				<li class="simple">
-					<a href="javascript:void(0)" ng-click="campus()" title="Acceder al Campus">		
+					<a ng-click="campus()" title="Acceder al Campus">		
 						<span class="title">Campus</span>
 						<img src="../../icons/campus_icon.gif" alt="Acceso al Campus" />						
 					</a>					
 				</li>
 				<li>
-					<a href="javascript:void(0)" ng-click="accesoRapido()" title="Abrir aulas con mensajes pendientes">			
+					<a ng-click="accesoRapido()" title="Abrir aulas con mensajes pendientes">			
 						<span class="title">Acceso Rápido</span>
 						<img src="../../icons/msg_icon.gif" alt="Acceso Rápido" class="image-left" />
 						<ul class="resources">
@@ -263,34 +263,32 @@ width:100%;
 			
 			<div class="clear"></div>
 		</div>
+		
 		<div class="clear"></div>
 		<div ng-repeat="aula in aulas " class="card">			
-			<h1><a href="javascript:void(0)" ng-click="openAula(aula)" class="class-name">{{aula.shortname}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
+			<h1><a ng-click="openAula(aula)" class="class-name">{{aula.shortname}}</a><span class="subtitle">Código: {{aula.codi_tercers}}</span></h1>
 			<img src="{{aula.mc_icon}}" alt="{{aula.title}}" class="class-image" />
 			<ul class="resources">
 				<li ng-repeat="res in aula.resources">
 					<span class="ctitle">
-					<a href="javascript:void(0)" ng-click="openResource(aula,res)" title="Acceder al {{res.title}}">{{res.title}}</a></span>
+					<a ng-click="openResource(aula,res)" title="Acceder al {{res.title}}">{{res.title}}</a></span>
 					<span class="munread msg first" ng-class="{hasunread: res.hasPendMes}">{{res.numMesPend}}</span>
 					<span class="mtotals msg last">{{res.numMesTot}}</span>
 					<!--<span class="msent msg" ng-show="res.sendMes != -1">{{res.sendMes}}</span>-->
 				</li>
 				<li ng-show="aula.domaintypeid == 'AULA'">
-					<span class="ctitle"><a href="javascript:void(0)" ng-click="openRac(aula,res)" title="Acceder al Registro de Evaluación Continua" target="_blank">REC</a></span>
+					<span class="ctitle"><a ng-click="openRac(aula,res)" title="Acceder al Registro de Evaluación Continua" target="_blank">REC</a></span>
 					<span style="clear:both;display:block;"></span>
 				</li>
 			</ul>			
 		</div>
 		
-		
-		
 		<div id="ertwitter" class="card" >
 			<a class="twitter-timeline"
-				data-chrome="noheader nofooter noborders noscrollbar"
-				data-tweet-limit="2"
+				data-chrome="noheader nofooter noborders"
 				data-user-id=""
 				data-show-replies="true" 
-				href="https://twitter.com/UOChrome" data-widget-id="478214066293313536">Siguenos en Twitter @UOChrome</a>
+				href="https://twitter.com/UOChrome" data-widget-id="478214066293313536">&nbsp;</a>			
 		</div>
 		
 		<div class="clear"></div>

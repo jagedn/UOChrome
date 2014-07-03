@@ -37,12 +37,14 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 		chrome.runtime.sendMessage({
 			uocrequest : "openBuzonPersonal"
 		});
+		return false;
 	};
 	
 	$scope.campus = function(){
 		chrome.runtime.sendMessage({
 			uocrequest : "openCampus"
 		});
+		return false;
 	}
 	
 	$scope.openAula = function(aula){
@@ -50,6 +52,7 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 			uocrequest: "openAula",
 			aula : aula
 		});
+		return false;
 	}
 	
 	$scope.openResource = function(aula, resource){
@@ -58,6 +61,7 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 			aula : aula,
 			resource : resource
 		});
+		return false;
 	}
 	
 	$scope.openRac = function(aula, resource){
@@ -66,6 +70,7 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 			aula : aula,
 			resource : resource
 		});
+		return false;
 	}
 	
 	$log.info("send request")
