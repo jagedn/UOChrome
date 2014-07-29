@@ -40,7 +40,7 @@ uocApp.controller('UOChromeCtrl', function($scope,$log) {
 		return false;
 	};
 	
-	$scope.campus = function(){
+	$scope.campus = function(){	
 		chrome.runtime.sendMessage({
 			uocrequest : "openCampus"
 		});

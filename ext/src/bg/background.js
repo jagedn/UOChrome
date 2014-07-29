@@ -1,5 +1,6 @@
 var settings = new Store("settings");
-var sesionId;
+var settings = new Store("settings");
+var sessionId=null;
 var loginInterval,homePageInterval,checkMinimumReachedInterval ;
 var currentAulas;
 var unReadMsg=0;
@@ -205,6 +206,7 @@ function resourcesLoaded( resources ){
 		var tmpacum=0;
 		for(var j in resources[a].resources){						
 			resources[a].resources[j].numMesPend |= 0;
+			resources[a].resources[j].numMesPend = resources[a].resources[j].numMesPend < 0 ? 0 : resources[a].resources[j].numMesPend 
 			unReadMsg += resources[a].resources[j].numMesPend;
 			if( resources[a].resources[j].numMesPend ){
 				console.log(resources[a].resources[j]);
@@ -227,18 +229,24 @@ function checkMinimumReached(){
 	console.log("end:resourcesLoaded")	
 }
 
+function doNothingCallback() {
+}
+
 function notifyLoginError(){
-	console.log("Login error");
-	var notification = window.webkitNotifications.createNotification(
-		'/icons/logo_puravida_color.png',                      // The image.
-		nowToStr(), // The title.
-		i18n.get("login_error")      // The body.
-	);
-	notification.show();
-	setTimeout( function(){
+	var opt = {
+			type: "basic",
+			title: nowToStr(),
+			message: i18n.get("login_error"),
+			iconUrl: '/icons/logo_puravida_color.png'
+	};
+    var notification = chrome.notifications.create('itemAdd',opt,doNothingCallback);
+
+    notification.show();
+    setTimeout( function(){
 		notification.cancel();
 		notification=null;
 	},1000*3);
+	console.log("login error")
 }
 
 function iconUnread(unread){
@@ -254,11 +262,15 @@ function iconUnread(unread){
 
 function notifyMinimumReached(acum){
 	if(!acum) return;
-	var notification = window.webkitNotifications.createNotification(
-		'/icons/logo_puravida_color.png',                      // The image.
-		nowToStr(), // The title.
-		i18n.get("unread") + ":"+acum     // The body.
-	);
+	
+	var opt = {
+			type: "basic",
+			title: nowToStr(),
+			message: i18n.get("unread") + ":"+acum,
+			iconUrl: '/icons/logo_puravida_color.png'
+	};
+    var notification = chrome.notifications.create('itemAdd',opt,doNothingCallback);
+	
 	notification.show();
 	setTimeout( function(){
 		notification.cancel();
@@ -321,11 +333,14 @@ chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
 	if( request.uocrequest ){
 		if( request.uocrequest == "refresh" ){			
+			console.log(sessionId)
 			doLogin();		
+			return true;
 		}
 		
 		if( request.uocrequest == "session" ){			
 			sendResponse({session:sessionId});
+			return true;
 		}
 		
 		if( request.uocrequest == "aulas" ){
@@ -336,6 +351,7 @@ chrome.extension.onMessage.addListener(
 				aulas:currentAulas,
 				personalMailbox:personalMailbox
 			});
+			return true;
 		}
 		
 		if(request.uocrequest == "openunread"){
@@ -353,35 +369,51 @@ chrome.extension.onMessage.addListener(
 						}										
 				}
 			}
+			return true;
 		}
 		
-		if( request.uocrequest == "openBuzonPersonal"){		
+		if( request.uocrequest === "openBuzonPersonal"){		
 			var	newURL ="http://cv.uoc.edu/WebMail/attach.do?s="+sessionId; 
 			trackEvent('buzon');
 			chrome.tabs.create({ url: newURL });
+			return true;
 		}
 		
-		if( request.uocrequest == "openCampus"){		
+		if( request.uocrequest === "openCampus"){		
 			var newURL ="http://cv.uoc.edu/cgi-bin/uocapp?s="+sessionId;
 			trackEvent('campus');
 			chrome.tabs.create({ url: newURL });
+			return true;
 		}
 		
-		if( request.uocrequest == "openAula"){		
+		if( request.uocrequest ==="openAula"){		
 			openAula(request.aula)
+			return true;
 		}
 		
-		if( request.uocrequest == "openResource"){		
+		if( request.uocrequest === "openResource"){		
 			openResource(request.aula,request.resource)
+			return true;
 		}
 		
-		if( request.uocrequest == "openRac"){		
+		if( request.uocrequest === "openRac"){		
 			openRac(request.aula)
+			return true;
 		}
-
 	}
+	return true;
   });
-		
-trackEvent('started');	
-// Por ultimo desencadenamos el proceso de login 
-loginInterval = setTimeout(doLogin,1000);
+
+  function startUOChromeBackground(){
+	trackEvent('started');	
+	// Por ultimo desencadenamos el proceso de login 
+	loginInterval = setTimeout(doLogin,3000);
+  }
+  
+chrome.runtime.onStartup.addListener(function() {  
+ startUOChromeBackground()
+});
+
+chrome.runtime.onInstalled.addListener(function() {  
+ startUOChromeBackground()
+});

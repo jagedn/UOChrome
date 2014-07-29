@@ -150,6 +150,13 @@ window.addEvent("domready", function () {
         "text": "Refactoring del plugin completo Feb/2014"
     });
 
+    settings.create({
+        "tab": i18n.get("logcambios"),
+        "group": "v. 4.0.5",
+        "name": "cambio4.0.5",
+        "type": "description",
+        "text": "Corregido duplicado de ventanas abiertas y bugs menores"
+    });
     
     settings.align([
         username,

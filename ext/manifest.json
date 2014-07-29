@@ -1,6 +1,6 @@
 {
   "name": "UOChrome 4",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "manifest_version": 2,
   "description": "Extension de Chrome para la UOC renovada.",
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com https://cdn.syndication.twimg.com/widgets/timelines/478214066293313536 https://platform.twitter.com; object-src 'self'",
@@ -13,13 +13,7 @@
 	
   "default_locale": "es",
   "background": {
-    "scripts": [
-	  "js/jquery-1.7.1.min.js",
-	  "src/options_custom/lib/store.js",
-	  "src/options_custom/i18n.js",
-	  "src/options_custom/js/i18n.js",	  
-    "src/bg/background.js"
-    ],
+	"page" : "src/bg/background.html",
     "persistent": true
   },
   "options_page": "src/options_custom/index.html",
