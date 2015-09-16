@@ -133,6 +133,7 @@ function getPersonalMessages(){
 	$.ajax({
 		url: "http://cv.uoc.edu/WebMail/attach.do",
 		type: 'get',
+    cache:false,
 		async:'false',
 		data: {s: sessionId},
 		success: function(data){
@@ -197,8 +198,8 @@ function resourcesLoaded( resources ){
 	currentAulas = resources;	
 	iconUnread(0);	
 	unReadMsg=0;
-	for(var a in resources){
-		if( !settings.get(resources[a].code+"_notificar") && resources[a].domaintypeid != 'BUZONPERSONAL' ){
+	for(var a in resources){  
+		if( ""+settings.get(resources[a].code+"_notificar")!='true' && resources[a].domaintypeid != 'BUZONPERSONAL' ){
 			console.log("resourceLoaded:notificar false "+resources[a].code);
 			resources[a].notificar = false
 			continue;
@@ -240,12 +241,13 @@ function notifyLoginError(){
 			iconUrl: '/icons/logo_puravida_color.png'
 	};
     var notification = chrome.notifications.create('itemAdd',opt,doNothingCallback);
-
-    notification.show();
-    setTimeout( function(){
-		notification.cancel();
-		notification=null;
-	},1000*3);
+    if(notification ){
+      notification.show();
+      setTimeout( function(){
+		  notification.cancel();
+		  notification=null;
+	   },1000*3);
+    }
 	console.log("login error")
 }
 
@@ -270,12 +272,13 @@ function notifyMinimumReached(acum){
 			iconUrl: '/icons/logo_puravida_color.png'
 	};
     var notification = chrome.notifications.create('itemAdd',opt,doNothingCallback);
-	
-	notification.show();
-	setTimeout( function(){
-		notification.cancel();
-		notification=null;
-	},1000*3);
+	  if(notification){
+    	notification.show();
+    	setTimeout( function(){
+    		notification.cancel();
+    		notification=null;
+    	},1000*3);
+    }       
 }
 
 function hasUnreadMessages(aula){
@@ -344,7 +347,7 @@ chrome.extension.onMessage.addListener(
 		}
 		
 		if( request.uocrequest == "aulas" ){
-			console.log("uocrequest:aulas="+currentAulas);
+			console.log(currentAulas);
 			sendResponse({
 				session:sessionId,
 				unReadMsg : unReadMsg,
@@ -407,7 +410,7 @@ chrome.extension.onMessage.addListener(
   function startUOChromeBackground(){
 	trackEvent('started');	
 	// Por ultimo desencadenamos el proceso de login 
-	loginInterval = setTimeout(doLogin,3000);
+	loginInterval = setTimeout(doLogin,10000);
   }
   
 chrome.runtime.onStartup.addListener(function() {  
